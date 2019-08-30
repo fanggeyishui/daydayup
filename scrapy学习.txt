@@ -1,0 +1,183 @@
+190819
+scrapy shell -s USER_AGENT="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:61.0) Gecko/20100101 Firefox/61.0" https://www.zhihu.com/question/285908404
+sel.xpath('//li[re:test(@class, "item-\d$")]//@href').getall()                  selecting links in list item with a “class” attribute ending with a digit
+response.xpath('//p[has-class("foo", "bar-baz")]')   属于两个类
+selector.xpath('//a[href=$url]', url="http://www.example.com")
+
+
+{
+Extract all prices from a Google Base XML feed which requires registering a namespace:
+
+sel.register_namespace("g", "http://base.google.com/ns/1.0")
+sel.xpath("//g:price").getall()
+}
+
+ 
+ 
+ 
+ 
+item
+	shallow copy     product2 = product.copy()  ==  product2 = Product(product)
+	deep copy   	 product2 = product.deepcopy()
+	{
+	class Product(scrapy.Item):
+		name = scrapy.Field()
+		last_updated = scrapy.Field(serializer=str)
+	}
+item更加详细的定义：{
+                    import scrapy
+                    from scrapy.loader.processors import Join, MapCompose, TakeFirst
+                    from w3lib.html import remove_tags
+
+                    def filter_price(value):
+                        if value.isdigit():
+                            return value
+
+                    class Product(scrapy.Item):
+                        name = scrapy.Field(
+                            input_processor=MapCompose(remove_tags),
+                            output_processor=Join(),
+                        )
+                        price = scrapy.Field(
+                            input_processor=MapCompose(remove_tags, filter_price),
+                            output_processor=TakeFirst(),
+                        )
+                        }
+	
+	
+item loader
+	l = ItemLoader(item=Product(), response=response)
+    l.add_xpath('name', '//div[@class="product_name"]')
+	l.add_css('stock', 'p#stock]')
+    l.add_value('last_updated', 'today') # you can also use literal values
+    return l.load_item()
+	
+	l.add_xpath('image_urls', '//*[@itemprop="image"][1]/@src',MapCompose(lambda i: urlparse.urljoin(response.url, i)))
+
+
+
+
+
+
+shell
+            from scrapy.shell import inspect_response
+            inspect_response(response, self)                    可打开调试，运行过程中
+            
+            
+            
+            
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+190820scrapy开发51job积累经验
+1.在spider里写解析
+2.setting中设置DEFAULT_REQUEST_HEADERS以伪装浏览器，并且取消爬虫协议
+3.item中要使用输入输出过滤器，要from scrapy.loader.processors import Join, MapCompose, TakeFirst
+    MapCompose中加入的函数要返回处理值，指定好input_processor,
+    处理的值需要通过l.add_xpath('name', '//div[@class="product_name"]')等添加
+4.setting中设置好pipeline才会运行管道文件。pipeline中的item来自spider中生成或返回的字典
+5.spider中如果要用到定义的item需要from myjob.items import MyjobItem
+        如果要用到item中定义的筛选方法要from scrapy.loader import ItemLoader，且需要定义好的item项目
+        itemloader是包含item对象与其处理方法的一个新对象
+        itemloader的作用由此可见是为了数据清洗
+
+
+
+
+
+190823 图片文件等下载存在的问题以及验证结果
+爬取的文件地址一定要放在file_path字段吗？其他字段不包含url且不设置可以爬取吗？  不用，起码重写过后的完全不用
+
+
+
+
+
+
+
+
+
+
+
+
+爬取时的注意事项，经验教训：
+1.设置好文件管道，命名方式为'proName.pipelines.pipName':1。此错误损耗了接近一下午，且耗费了无数次调试。
+2.自己写file_path时一定要把response和info字段写上None。耗费了一晚上且各种找不着错。
+3.get_media中产生的request请求会传到file_path，用request.meta可以填充想要的文件夹。
+4. FILES_STORE = '/path/to/valid/dir  'IMAGES_STORE = '/path/to/valid/dir' 该设置决定存储位置
+5.框架自带的pipline会写入以下字段：path，checksum,原始url,这三个会存储在images列表中，以字典形式。但是要写好FILES_URLS_FIELD = 'field_name_for_your_files_urls' 和  FILES_RESULT_FIELD = 'field_name_for_your_processed_files'。默认的是file_urls image_urls 与files images
+6.过滤小图像IMAGES_MIN_HEIGHT = 110   IMAGES_MIN_WIDTH = 110
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

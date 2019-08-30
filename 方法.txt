@@ -1,0 +1,9 @@
+pycharm激活
+参考：https://blog.csdn.net/code321/article/details/98438860（内行django与爬虫教程）
+1.补丁放到bin下面
+2.将“-javaagent:C:\mysoftware\pycharm2019.2\bin\jetbrains-agent.jar”写入到bin下的pycharm64.exe.vmoptions
+3.直接选择License server激活。然后点击Discover Server按钮，等待，active
+4.激活后，修改一下host文件，加入0.0.0.0 account.jetbrains.com   和       0.0.0.0 www.jetbrains.com     (????必须？？？)
+
+anaconda安装
+记得加入环境变量path

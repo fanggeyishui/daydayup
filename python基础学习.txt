@@ -1,0 +1,214 @@
+19.08.12
+list:extend,pop（按位置，且有返回值）,insert(location,value),index(value,start,end),clear,copy,count,remove(第一个出现的值),reverse,sort
+
+print():sep决定分隔符，end决定结束符,file决定输出位置  print('ddsd',sep='|',end='//',file=f)
+
+数：num=1_000_000,0box进制，3e10,复数num=2+0.2j
+字符串：单双引号目的是为了区别彼此？都存在要转义
+	str()  repr()
+	'''三引号可用来注释也可用来包含长字符串赋值'''   \转义符可以转移换行来不间断字符串，也可以让代码换行
+	原始字符串以r开头不会把\当作转义符，应用：r'c:\dir\file'
+	比特流：b'str'只能用在ascall上，'字符串'.encode(),bytes(要制定编码方式)能编中文，.decode()可以解码
+	\b退格\r回车\t制表
+	len('返回字符串长度') in判断是否包含字符串
+	
+
+格式化输出：
+	print('num is:%+08.3f' % num) 带正负号，共八位不足补零，小数保留3位   %10.3保留俩个字符，共占10位   -都是左对齐
+查看帮助：
+	dir(str之类的对象)：列出str含有的方法       help(str.method):列出具体用法
+	
+str的方法：	
+	strip()删除前后空白lstirp()删除左空白rstrip()删除右边空白  可删除指定字符集
+	startwith()endwith()find(没找到返回-1)index(没找到返回错误)replace(old,new,count)   
+	table=str.maketrans('str1','str2')   s.translate(table)
+	分割合并  s.split(None,2)空字符分割，只分两次    '/'.join(mylist)用/组合字符串列表
+	
+	
+	
+	
+	
+运算符：
+	str*5字符串重复5遍
+	/除  //整除         %取余数
+	位运算&|^~取反<<左位移>>
+	
+	
+	
+	
+190813
+序列封包解包
+a=1,2,3   #a就变成了元组
+x,y,z=a    #a=(1,2,3)
+first,*middle,last=range(1,10)
+tuple()   list()
+blist[2:2]=[1,2]slice为空时，即为插入
+l.sort(key=len,reverse=True)
+
+
+dict()的三种用法：
+	d1=dict([(),(),()])
+	d2=dict([[],[],[]])
+	d3=dict(a=1,b=2)
+	
+字典对象下的方法：
+	get()不存在的会返回None
+	dir1.update(dir2)用后者更新前者
+	items(),keys(),values()
+	pop(),popitem()
+	dir.setdefaault(key,value)原来存在key返回原来的value，不存在则设置并返回
+	dir=dict.fromkeys((1,5),'fuck')
+	
+字典用于格式化字符串输出：
+	str='a is:%(a)s,b is:%(b)010d'
+	dir={'a':'something to say','b':334}
+	print(str % dir)
+	
+	
+	
+for:
+	a_generator=((x,y) for x in range(10) for y in range(1,8) if x%y==1 )
+	[x for x in reserved(a)]
+	zip(la,lb)返回一个tuple列表
+	
+	
+	
+	
+	
+函数：
+	返回多个函数参数会自动变为元组，可以用多个变量解包接受
+	函数文档'''   '''
+	test(x,y,z=3,*books,**scores)*参数传入元组**参数传入字典
+
+
+
+	
+190814
+逆向参数收集：
+	test(*mydata)将会将mydata拆分出来给test下的参数
+	test（**mydic）按照字典的key拿来给test下的参数用
+	
+全局变量：
+	局部变量与全局变量同名，将会对其遮蔽。使用globa声明可以避免遮蔽
+	nonlocal声明变量为当前函数所在函数内的变量
+	lambda：
+		return lambda x,y:x+y
+		
+		
+		
+类：
+	p.intro = MethodType(intro_func,p)   之后p.intro()不用再加p作为第一个参数
+	使用类来调用实例方法，则必须手动为方法的第一个参数传入参数值
+	
+	
+	190815：
+今天学习（到149页）：
+	1.类调用实例   类方法与静态方法p135
+	2.函数装饰器：被修饰的函数总是被替换成＠符号所引用的函数的返回值
+	3.property定义类属性的用法，尤其是set注意
+	4.继承，多继承，重写父类，调用被重写的方法
+
+
+
+类：	
+	用＠classmethod 和＠staticmethod 修饰的是类方法和静态方法，前者自动绑定类，后者不会
+	
+装饰器：
+	权限检查  args使用注意
+	
+	
+property(fget=None , fset=None, fdel=None , doc=None) (p141-p143???)
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+190816
+1.super函数调用父类构造方法
+2.动态属性与__slots__
+
+super().__init__(salary)     Customer.__init__(self,favorite,address)
+__slots__ = ('walk','age','name')
+
+
+
+
+190823
+json读写
+1.json文件内的格式有要求才能load
+2.txt格式写json文件打开中文还是数字编码，包括utf-8
+3.dump后的中文都是数字编码
+4.w,w+都是覆盖，a是追加
+5.读取json文件进变量时要先read一遍判断是否非空
+
+
+
+
+190826
+p145-147:type()定义类与使用metaclass
+
+
+19.08.30
+多态
+issubclass（）和 isinstance（）
+枚举类，构造器？？？
+
+
+通过 sys 模块的 argv 列表来获取运行 Python 程序时提供的参数
+
+除非在try 块、 except 块中调用了退出 Python 解释器的方法，否则不管在 try 块、 except 块中执行怎样的代码，出现怎样的情况，异常处理的 finally 块总会被执行。finally中的return会是最终return结果
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
